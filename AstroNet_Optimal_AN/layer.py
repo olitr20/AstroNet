@@ -26,13 +26,13 @@ class Convolution1(nn.Module):
             return weight_mean
         elif i == 1:
             pr1 = pr1.view(self.out_features, 1, 1, 1)
-            self.weights_new = self.weights.mul(pr1)
+            self.weights_new = self.weights.clone() * pr1.clone()
             output = F.relu(self.bn(nn.functional.conv2d(input, self.weights_new, stride=1, padding=1, bias=None)))
             weight_max, id = torch.max(self.weights_new.view(self.out_features, self.in_features * 3 * 3), dim=1)
             return output, weight_max
         else:
             pr2 = pr2.view(self.out_features, 1, 1, 1)
-            weight_finial = self.weights_new.mul(pr2)
+            weight_finial = self.weights_new * pr2
             output = F.relu(self.bn(nn.functional.conv2d(input, weight_finial, stride=1, padding=1, bias=None)))
             return output
 
@@ -59,13 +59,13 @@ class Convolution2(nn.Module):
             return weight_mean
         elif i == 1:
             pr1 = pr1.view(self.out_features, 1, 1, 1)
-            self.weights_new = self.weights.mul(pr1)
+            self.weights_new = self.weights.clone() * pr1.clone()
             output = F.relu(self.bn(nn.functional.conv2d(input, self.weights_new, stride=1, padding=1, bias=None)))
             weight_max, id = torch.max(self.weights_new.view(self.out_features, self.in_features * 3 * 3), dim=1)
             return output, input, weight_max
         else:
             pr2 = pr2.view(self.out_features, 1, 1, 1)
-            weight_finial = self.weights_new.mul(pr2)
+            weight_finial = self.weights_new * pr2
             output = F.relu(self.bn(nn.functional.conv2d(input, weight_finial, stride=1, padding=1, bias=None)))
             return output, input
 
@@ -91,13 +91,13 @@ class Convolution3(nn.Module):
             return weight_mean
         elif i == 1:
             pr1 = pr1.view(self.out_features, 1, 1, 1)
-            self.weights_new = self.weights.mul(pr1)
+            self.weights_new = self.weights.clone() * pr1.clone()
             output = self.bn(nn.functional.conv2d(input, self.weights_new, stride=1, padding=1, bias=None))
             weight_max, id = torch.max(self.weights_new.view(self.out_features, self.in_features * 3 * 3), dim=1)
             return output, weight_max
         else:
             pr2 = pr2.view(self.out_features, 1, 1, 1)
-            weight_finial = self.weights_new.mul(pr2)
+            weight_finial = self.weights_new * pr2
             output = self.bn(nn.functional.conv2d(input, weight_finial, stride=1, padding=1, bias=None))
             return output
 
@@ -123,13 +123,13 @@ class Convolution4(nn.Module):
             return weight_mean
         elif i == 1:
             pr1 = pr1.view(self.out_features, 1, 1, 1)
-            self.weights_new = self.weights.mul(pr1)
+            self.weights_new = self.weights.clone() * pr1.clone()
             output = F.relu(self.bn(nn.functional.conv2d(input, self.weights_new, stride=1, padding=1, bias=None)))
             weight_max, id = torch.max(self.weights_new.view(self.out_features, self.in_features * 3 * 3), dim=1)
             return output, input, weight_max
         else:
             pr2 = pr2.view(self.out_features, 1, 1, 1)
-            weight_finial = self.weights_new.mul(pr2)
+            weight_finial = self.weights_new * pr2
             output = F.relu(self.bn(nn.functional.conv2d(input, weight_finial, stride=1, padding=1, bias=None)))
             return output, input
 
@@ -155,13 +155,13 @@ class Convolution5(nn.Module):
             return weight_mean
         elif i == 1:
             pr1 = pr1.view(self.out_features, 1, 1, 1)
-            self.weights_new = self.weights.mul(pr1)
+            self.weights_new = self.weights.clone() * pr1.clone()
             output = self.bn(nn.functional.conv2d(input, self.weights_new, stride=1, padding=1, bias=None))
             weight_max, id = torch.max(self.weights_new.view(self.out_features, self.in_features * 3 * 3), dim=1)
             return output, weight_max
         else:
             pr2 = pr2.view(self.out_features, 1, 1, 1)
-            weight_finial = self.weights_new.mul(pr2)
+            weight_finial = self.weights_new * pr2
             output = self.bn(nn.functional.conv2d(input, weight_finial, stride=1, padding=1, bias=None))
             return output
 
@@ -195,17 +195,17 @@ class Convolution6(nn.Module):
             return weight_mean, shortcut_weight_mean
         elif i == 1:
             pr1 = pr1.view(self.out_features, 1, 1, 1)
-            self.weights_new = self.weights.mul(pr1)
+            self.weights_new = self.weights.clone() * pr1.clone()
             output = F.relu(self.bn(nn.functional.conv2d(input,  self.weights_new, stride=2, padding=1, bias=None)))
             weight_max, id = torch.max( self.weights_new.view(self.out_features, self.in_features * 3 * 3), dim=1)
             shortcut_pr1 = shortcut_pr1.view(self.out_features, 1, 1, 1)
-            self.shortcut_weights_new = self.shortcut_weights.mul(shortcut_pr1)
+            self.shortcut_weights_new = self.shortcut_weights.clone().mul(shortcut_pr1)
             shortcut_output = self.shortcut_bn(nn.functional.conv2d(input, self.shortcut_weights_new, stride=2, padding=1, bias=None))
             shortcut_weight_max, id = torch.max(self.shortcut_weights_new.view(self.out_features, self.in_features * 3 * 3), dim=1)
             return output, shortcut_output, weight_max, shortcut_weight_max
         else:
             pr2 = pr2.view(self.out_features, 1, 1, 1)
-            weight_finial = self.weights_new.mul(pr2)
+            weight_finial = self.weights_new * pr2
             output = F.relu(self.bn(nn.functional.conv2d(input, weight_finial, stride=2, padding=1, bias=None)))
             shortcut_pr2 = shortcut_pr2.view(self.out_features, 1, 1, 1)
             shortcut_weight_finial = self.shortcut_weights_new.mul(shortcut_pr2)
@@ -234,13 +234,13 @@ class Convolution7(nn.Module):
             return weight_mean
         elif i == 1:
             pr1 = pr1.view(self.out_features, 1, 1, 1)
-            self.weights_new = self.weights.mul(pr1)
+            self.weights_new = self.weights.clone() * pr1.clone()
             output = self.bn(nn.functional.conv2d(input, self.weights_new, stride=1, padding=1, bias=None))
             weight_max, id = torch.max(self.weights_new.view(self.out_features, self.in_features * 3 * 3), dim=1)
             return output, weight_max
         else:
             pr2 = pr2.view(self.out_features, 1, 1, 1)
-            weight_finial = self.weights_new.mul(pr2)
+            weight_finial = self.weights_new * pr2
             output = self.bn(nn.functional.conv2d(input, weight_finial, stride=1, padding=1, bias=None))
             return output
 
@@ -266,13 +266,13 @@ class Convolution8(nn.Module):
             return weight_mean
         elif i == 1:
             pr1 = pr1.view(self.out_features, 1, 1, 1)
-            self.weights_new = self.weights.mul(pr1)
+            self.weights_new = self.weights.clone() * pr1.clone()
             output = F.relu(self.bn(nn.functional.conv2d(input, self.weights_new, stride=1, padding=1, bias=None)))
             weight_max, id = torch.max(self.weights_new.view(self.out_features, self.in_features * 3 * 3), dim=1)
             return output, input, weight_max
         else:
             pr2 = pr2.view(self.out_features, 1, 1, 1)
-            weight_finial = self.weights_new.mul(pr2)
+            weight_finial = self.weights_new * pr2
             output = F.relu(self.bn(nn.functional.conv2d(input, weight_finial, stride=1, padding=1, bias=None)))
             return output, input
 
@@ -298,13 +298,13 @@ class Convolution9(nn.Module):
             return weight_mean
         elif i == 1:
             pr1 = pr1.view(self.out_features, 1, 1, 1)
-            self.weights_new = self.weights.mul(pr1)
+            self.weights_new = self.weights.clone() * pr1.clone()
             output = self.bn(nn.functional.conv2d(input, self.weights_new, stride=1, padding=1, bias=None))
             weight_max, id = torch.max(self.weights_new.view(self.out_features, self.in_features * 3 * 3), dim=1)
             return output, weight_max
         else:
             pr2 = pr2.view(self.out_features, 1, 1, 1)
-            weight_finial = self.weights_new.mul(pr2)
+            weight_finial = self.weights_new * pr2
             output = self.bn(nn.functional.conv2d(input, weight_finial, stride=1, padding=1, bias=None))
             return output
 
@@ -338,17 +338,17 @@ class Convolution10(nn.Module):
             return weight_mean, shortcut_weight_mean
         elif i == 1:
             pr1 = pr1.view(self.out_features, 1, 1, 1)
-            self.weights_new = self.weights.mul(pr1)
+            self.weights_new = self.weights.clone() * pr1.clone()
             output = F.relu(self.bn(nn.functional.conv2d(input, self.weights_new, stride=2, padding=1, bias=None)))
             weight_max, id = torch.max(self.weights_new.view(self.out_features, self.in_features * 3 * 3), dim=1)
             shortcut_pr1 = shortcut_pr1.view(self.out_features, 1, 1, 1)
-            self.shortcut_weights_new = self.shortcut_weights.mul(shortcut_pr1)
+            self.shortcut_weights_new = self.shortcut_weights.clone().mul(shortcut_pr1)
             shortcut_output = self.shortcut_bn(nn.functional.conv2d(input, self.shortcut_weights_new, stride=2, padding=1, bias=None))
             shortcut_weight_max, id = torch.max(self.shortcut_weights_new.view(self.out_features, self.in_features * 3 * 3), dim=1)
             return output, shortcut_output, weight_max, shortcut_weight_max
         else:
             pr2 = pr2.view(self.out_features, 1, 1, 1)
-            weight_finial = self.weights_new.mul(pr2)
+            weight_finial = self.weights_new * pr2
             output = F.relu(self.bn(nn.functional.conv2d(input, weight_finial, stride=2, padding=1, bias=None)))
             shortcut_pr2 = shortcut_pr2.view(self.out_features, 1, 1, 1)
             shortcut_weight_finial = self.shortcut_weights_new.mul(shortcut_pr2)
@@ -377,13 +377,13 @@ class Convolution11(nn.Module):
             return weight_mean
         elif i == 1:
             pr1 = pr1.view(self.out_features, 1, 1, 1)
-            self.weights_new = self.weights.mul(pr1)
+            self.weights_new = self.weights.clone() * pr1.clone()
             output = self.bn(nn.functional.conv2d(input, self.weights_new, stride=1, padding=1, bias=None))
             weight_max, id = torch.max(self.weights_new.view(self.out_features, self.in_features * 3 * 3), dim=1)
             return output, weight_max
         else:
             pr2 = pr2.view(self.out_features, 1, 1, 1)
-            weight_finial = self.weights_new.mul(pr2)
+            weight_finial = self.weights_new * pr2
             output = self.bn(nn.functional.conv2d(input, weight_finial, stride=1, padding=1, bias=None))
             return output
 
@@ -409,13 +409,13 @@ class Convolution12(nn.Module):
             return weight_mean
         elif i == 1:
             pr1 = pr1.view(self.out_features, 1, 1, 1)
-            self.weights_new = self.weights.mul(pr1)
+            self.weights_new = self.weights.clone() * pr1.clone()
             output = F.relu(self.bn(nn.functional.conv2d(input, self.weights_new, stride=1, padding=1, bias=None)))
             weight_max, id = torch.max(self.weights_new.view(self.out_features, self.in_features * 3 * 3), dim=1)
             return output, input, weight_max
         else:
             pr2 = pr2.view(self.out_features, 1, 1, 1)
-            weight_finial = self.weights_new.mul(pr2)
+            weight_finial = self.weights_new * pr2
             output = F.relu(self.bn(nn.functional.conv2d(input, weight_finial, stride=1, padding=1, bias=None)))
             return output, input
 
@@ -441,13 +441,13 @@ class Convolution13(nn.Module):
             return weight_mean
         elif i == 1:
             pr1 = pr1.view(self.out_features, 1, 1, 1)
-            self.weights_new = self.weights.mul(pr1)
+            self.weights_new = self.weights.clone() * pr1.clone()
             output = self.bn(nn.functional.conv2d(input, self.weights_new, stride=1, padding=1, bias=None))
             weight_max, id = torch.max(self.weights_new.view(self.out_features, self.in_features * 3 * 3), dim=1)
             return output, weight_max
         else:
             pr2 = pr2.view(self.out_features, 1, 1, 1)
-            weight_finial = self.weights_new.mul(pr2)
+            weight_finial = self.weights_new * pr2
             output = self.bn(nn.functional.conv2d(input, weight_finial, stride=1, padding=1, bias=None))
             return output
 
@@ -481,17 +481,17 @@ class Convolution14(nn.Module):
             return weight_mean, shortcut_weight_mean
         elif i == 1:
             pr1 = pr1.view(self.out_features, 1, 1, 1)
-            self.weights_new = self.weights.mul(pr1)
+            self.weights_new = self.weights.clone() * pr1.clone()
             output = F.relu(self.bn(nn.functional.conv2d(input, self.weights_new, stride=2, padding=1, bias=None)))
             weight_max, id = torch.max(self.weights_new.view(self.out_features, self.in_features * 3 * 3), dim=1)
             shortcut_pr1 = shortcut_pr1.view(self.out_features, 1, 1, 1)
-            self.shortcut_weights_new = self.shortcut_weights.mul(shortcut_pr1)
+            self.shortcut_weights_new = self.shortcut_weights.clone().mul(shortcut_pr1)
             shortcut_output = self.shortcut_bn(nn.functional.conv2d(input, self.shortcut_weights_new, stride=2, padding=1, bias=None))
             shortcut_weight_max, id = torch.max(self.shortcut_weights_new.view(self.out_features, self.in_features * 3 * 3), dim=1)
             return output, shortcut_output, weight_max, shortcut_weight_max
         else:
             pr2 = pr2.view(self.out_features, 1, 1, 1)
-            weight_finial = self.weights_new.mul(pr2)
+            weight_finial = self.weights_new * pr2
             output = F.relu(self.bn(nn.functional.conv2d(input, weight_finial, stride=2, padding=1, bias=None)))
             shortcut_pr2 = shortcut_pr2.view(self.out_features, 1, 1, 1)
             shortcut_weight_finial = self.shortcut_weights_new.mul(shortcut_pr2)
@@ -520,13 +520,13 @@ class Convolution15(nn.Module):
             return weight_mean
         elif i == 1:
             pr1 = pr1.view(self.out_features, 1, 1, 1)
-            self.weights_new = self.weights.mul(pr1)
+            self.weights_new = self.weights.clone() * pr1.clone()
             output = self.bn(nn.functional.conv2d(input, self.weights_new, stride=1, padding=1, bias=None))
             weight_max, id = torch.max(self.weights_new.view(self.out_features, self.in_features * 3 * 3), dim=1)
             return output, weight_max
         else:
             pr2 = pr2.view(self.out_features, 1, 1, 1)
-            weight_finial = self.weights_new.mul(pr2)
+            weight_finial = self.weights_new * pr2
             output = self.bn(nn.functional.conv2d(input, weight_finial, stride=1, padding=1, bias=None))
             return output
 
@@ -552,13 +552,13 @@ class Convolution16(nn.Module):
             return weight_mean
         elif i == 1:
             pr1 = pr1.view(self.out_features, 1, 1, 1)
-            self.weights_new = self.weights.mul(pr1)
+            self.weights_new = self.weights.clone() * pr1.clone()
             output = F.relu(self.bn(nn.functional.conv2d(input, self.weights_new, stride=1, padding=1, bias=None)))
             weight_max, id = torch.max(self.weights_new.view(self.out_features, self.in_features * 3 * 3), dim=1)
             return output, input, weight_max
         else:
             pr2 = pr2.view(self.out_features, 1, 1, 1)
-            weight_finial = self.weights_new.mul(pr2)
+            weight_finial = self.weights_new * pr2
             output = F.relu(self.bn(nn.functional.conv2d(input, weight_finial, stride=1, padding=1, bias=None)))
             return output, input
 
@@ -584,13 +584,13 @@ class Convolution17(nn.Module):
             return weight_mean
         elif i == 1:
             pr1 = pr1.view(self.out_features, 1, 1, 1)
-            self.weights_new = self.weights.mul(pr1)
+            self.weights_new = self.weights.clone() * pr1.clone()
             output = self.bn(nn.functional.conv2d(input, self.weights_new, stride=1, padding=1, bias=None))
             weight_max, id = torch.max(self.weights_new.view(self.out_features, self.in_features * 3 * 3), dim=1)
             return output, weight_max
         else:
             pr2 = pr2.view(self.out_features, 1, 1, 1)
-            weight_finial = self.weights_new.mul(pr2)
+            weight_finial = self.weights_new * pr2
             output = self.bn(nn.functional.conv2d(input, weight_finial, stride=1, padding=1, bias=None))
             return output
 
@@ -615,13 +615,13 @@ class Fully_Connection(nn.Module):
             return data
         elif i == 1:
             pr1 = pr1.view(self.in_features, 1)
-            self.weights_new = self.weights.mul(pr1)
+            self.weights_new = self.weights.clone() * pr1.clone()
             output = input.mm(self.weights_new)
             weight_max, id = torch.max(self.weights_new.view(self.in_features, self.out_features), dim=1)
             return output, weight_max
         else:
             pr2 = pr2.view(self.in_features, 1)
-            weight_finial = self.weights_new.mul(pr2)
+            weight_finial = self.weights_new * pr2
             output = input.mm(weight_finial)
             # output.add_(self.bias)
             return output

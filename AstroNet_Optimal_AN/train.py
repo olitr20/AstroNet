@@ -10,6 +10,9 @@ from threading import Thread, BoundedSemaphore
 from model import ResNet18, Artificial_Astrocyte_Network
 from utils import progress_bar
 
+torch.autograd.set_detect_anomaly(True)
+
+
 
 parser = argparse.ArgumentParser(description='PyTorch Radiomics Training')
 parser.add_argument('--lr_cnn', default=1e-3, type=float, help='learning rate')
@@ -49,14 +52,14 @@ def cnn_train(epoch, dataloader, cnn, aan, criterion, optimizer_cnn, optimizer_a
         pattern = 1
         outputs, weights_max_1 = cnn(inputs, pr1, 0,  pattern)
         pr2 = aan(weights_max_1)
-        loss = criterion(outputs, targets.long())
+        loss = criterion(outputs, targets.long().squeeze())
         optimizer_cnn.zero_grad()
         optimizer_aan.zero_grad()
         loss.backward(retain_graph=True)
         optimizer_cnn.step()
         pattern = 2
         outputs = cnn(inputs, pr1, pr2, pattern)
-        loss = criterion(outputs, targets.long())
+        loss = criterion(outputs, targets.long().squeeze())
         optimizer_cnn.zero_grad()
         optimizer_aan.zero_grad()
         loss.backward()
@@ -92,14 +95,14 @@ def aan_train(epoch, dataloader, cnn, aan, criterion, optimizer_cnn, optimizer_a
         pattern = 1
         outputs, weights_max_1 = cnn(inputs, pr1, 0,  pattern)
         pr2 = aan(weights_max_1)
-        loss = criterion(outputs, targets.long())
+        loss = criterion(outputs, targets.long().squeeze())
         optimizer_cnn.zero_grad()
         optimizer_aan.zero_grad()
         loss.backward(retain_graph=True)
         optimizer_cnn.step()
         pattern = 2
         outputs = cnn(inputs, pr1, pr2, pattern)
-        loss = criterion(outputs, targets.long())
+        loss = criterion(outputs, targets.long().squeeze())
         optimizer_cnn.zero_grad()
         optimizer_aan.zero_grad()
         loss.backward()
@@ -116,8 +119,8 @@ def aan_train(epoch, dataloader, cnn, aan, criterion, optimizer_cnn, optimizer_a
 
 if __name__ == '__main__':
     print('==> Preparing data..')
-    trainloader = DataLoader(torch.load('../Data/Train_CIFAR10_All.t7'), batch_size=args.train_batch_size, shuffle=True)
-    valloader = DataLoader(torch.load('../Data/Val_CIFAR10_All.t7'), batch_size=args.val_batch_size, shuffle=True)
+    trainloader = DataLoader(torch.load('../Data/Train_CIFAR10.t7', weights_only=False), batch_size=args.train_batch_size, shuffle=True)
+    valloader = DataLoader(torch.load('../Data/Val_CIFAR10.t7', weights_only=False), batch_size=args.val_batch_size, shuffle=True)
     print('==> Building model..')
     cnn = ResNet18()
     cnn.to(device)
